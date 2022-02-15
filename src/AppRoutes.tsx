@@ -1,34 +1,51 @@
 import { Link, Route, Routes } from 'react-router-dom';
+import { Box, SxProps, Theme } from '@mui/material';
+import { lazy } from 'react';
 
-function Home() {
-  return (
-    <main>
-      <h2>Welcome to the homepage!</h2>
-      <p>You can do this, I believe in you.</p>
-    </main>
-  );
-}
+const Home = lazy(() => import('./pages/Home'));
+const PortfolioSearch = lazy(() => import('./pages/PortfolioSearch'));
+const Portfolio = lazy(() => import('./pages/Portfolio'));
 
-function About() {
-  return (
-    <main>
-      <h2>Who are we?</h2>
-      <p>That feels like an existential question, dont you think?</p>
-    </main>
-  );
-}
+const routesDef = [
+  { path: '/', title: 'Home', Component: Home },
+  {
+    path: 'search-portfolio',
+    title: 'Portfolio Search',
+    Component: PortfolioSearch,
+  },
+  { path: 'portfolio', title: 'Portfolio', Component: Portfolio },
+];
+
+const mainStyles: SxProps<Theme> = {
+  padding: '80px 120px',
+  height: '610px',
+};
+
+const wrapperStyles: SxProps<Theme> = {
+  height: '100%',
+  backgroundColor: 'white',
+};
 
 function AppRoutes() {
   return (
-    <div className="App">
-      <nav>
-        <Link to="/">Home</Link> | <Link to="about">About</Link>
-      </nav>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="about" element={<About />} />
-      </Routes>
-    </div>
+    <Box>
+      <Box component="nav">
+        {routesDef.map(({ path, title }) => (
+          <Box component="span" key={path} pr={1}>
+            <Link to={path}>{title}</Link>
+          </Box>
+        ))}
+      </Box>
+      <Box component="main" sx={mainStyles}>
+        <Box sx={wrapperStyles}>
+          <Routes>
+            {routesDef.map(({ path, Component }) => (
+              <Route key={path} path={path} element={<Component />} />
+            ))}
+          </Routes>
+        </Box>
+      </Box>
+    </Box>
   );
 }
 

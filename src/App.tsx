@@ -1,26 +1,30 @@
-import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import AppRoutes from './AppRoutes';
+import { primaryTheme as theme } from 'utils/themes';
+import { ThemeProvider } from '@mui/material';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      staleTime: 1000 * 30,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function App() {
-  const [counter, setCounter] = React.useState(0);
-
-  React.useEffect(() => {
-    const int = setInterval(() => {
-      setCounter(c => c + 1);
-    }, 1000);
-
-    return () => {
-      clearInterval(int);
-    };
-  }, []);
   return (
-    <div className="App">
-      <p>{counter}</p>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </ThemeProvider>
+      <ReactQueryDevtools />
+    </QueryClientProvider>
   );
 }
 
