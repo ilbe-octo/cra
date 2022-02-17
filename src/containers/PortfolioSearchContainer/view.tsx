@@ -9,6 +9,7 @@ import {
   AddOutlined as AddIcon,
   SearchOutlined as LoopIcon,
 } from '@mui/icons-material';
+import { WORDINGS } from 'common/constants';
 import {
   containerStyles,
   searchHeaderStyles,
@@ -16,17 +17,6 @@ import {
   createBtnWrapperStyles,
   circularProgressStyles,
 } from './styles';
-
-const WORDINGS = {
-  CREATE_PORTFOLIO: 'Créer Portefeuille',
-  SEARCH_PORTFOLIO: 'Rechercher un portefeuille',
-  PORTFOLIO_SEARCH_PLACEHOLDER:
-    'code parent, code portefeuille, code division...',
-  ERRORS: {
-    'technical.error':
-      'Une erreur est survenue, veuillez réessayer ultérieurement.',
-  } as Record<string, string>,
-};
 
 interface ViewProps {
   loading: boolean;

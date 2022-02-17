@@ -1,30 +1,31 @@
 import { SxProps, Theme } from '@mui/material';
 
 export const containerStyles: SxProps<Theme> = {
+  height: '100%',
+  minHeight: 500,
   display: 'flex',
   flexDirection: 'column',
-  minHeight: '500px',
-  height: '100%',
 };
 
-export const createBtnWrapperStyles: SxProps<Theme> = theme => ({
+export const createBtnWrapperStyles: SxProps<Theme> = {
+  px: 2,
+  py: 4,
   alignSelf: 'flex-end',
-  padding: theme.spacing(4, 2),
-});
+};
 
-export const searchWrapperStyles: SxProps<Theme> = theme => ({
+export const searchWrapperStyles: SxProps<Theme> = {
   flex: 1,
-  width: '450px',
+  pt: 12.5,
+  width: 450,
   alignSelf: 'center',
-  paddingTop: theme.spacing(12.5),
-});
+};
 
-export const searchHeaderStyles: SxProps<Theme> = theme => ({
+export const searchHeaderStyles: SxProps<Theme> = {
+  mb: 2,
   fontSize: '1.3rem',
   textAlign: 'center',
-  marginBottom: theme.spacing(2),
-});
+};
 
-export const circularProgressStyles: SxProps<Theme> = theme => ({
-  marginRight: theme.spacing(0.5),
-});
+export const circularProgressStyles: SxProps<Theme> = {
+  mr: 0.5,
+};

@@ -1,4 +1,4 @@
-import { ApiError, Page, PaginationParams, Portfolio } from 'common/types';
+import { Page, PaginationParams, Portfolio } from 'common/types';
 
 export interface PortfolioSearchPayload extends PaginationParams {
   searchKeyword: string;
@@ -32,12 +32,6 @@ const searchPortfolios = async ({
   pageNumber = 1,
 }: PortfolioSearchPayload): Promise<Page<Portfolio[], 'portfolios'>> => {
   await stopFor(1500);
-
-  const error: ApiError = { messageList: [{ code: 'technical.error' }] };
-
-  if (Math.random() > 0.5) {
-    throw error;
-  }
 
   const offset = (pageNumber - 1) * pageSize;
 

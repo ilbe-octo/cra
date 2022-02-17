@@ -32,7 +32,10 @@ const usePortfolioSearchQuery = ({
       searchKeyword: keyword,
     });
 
-  const { isLoading, data, error } = useQuery<PortfoliosPage, ApiError>({
+  const { isLoading, isFetching, data, error } = useQuery<
+    PortfoliosPage,
+    ApiError
+  >({
     enabled: !!keyword,
     keepPreviousData: true,
     queryKey: _getCacheKey(),
@@ -47,7 +50,7 @@ const usePortfolioSearchQuery = ({
 
   const fetchPage = (p: number) => setPage(p);
 
-  return { isLoading, data, error, page, fetch, fetchPage };
+  return { isLoading, isFetching, data, error, page, fetch, fetchPage };
 };
 
 export default usePortfolioSearchQuery;

@@ -1,19 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom';
-import View from './view';
 import { usePortfolioSearchQuery } from 'hooks/portfolio';
-
-const PATHS = {
-  portfolio: {
-    to: (params?: URLSearchParams) => `/portfolio${params ? `?${params}` : ''}`,
-  },
-};
+import { PATHS } from 'common/constants';
+import View from './view';
 
 function PortfolioSearchContainer() {
   const navigate = useNavigate();
   const [errorCode, setErrorCode] = useState<string>();
 
-  const { isLoading, error, fetch } = usePortfolioSearchQuery({
+  const { isFetching, error, fetch } = usePortfolioSearchQuery({
     onSuccess: (_, keyword) => {
       const searchParams = createSearchParams({ q: keyword });
       navigate(PATHS.portfolio.to(searchParams));
@@ -32,7 +27,7 @@ function PortfolioSearchContainer() {
 
   return (
     <View
-      loading={isLoading}
+      loading={isFetching}
       errorCode={errorCode}
       onSubmit={handleSubmit}
       onErrorReset={() => setErrorCode(undefined)}
