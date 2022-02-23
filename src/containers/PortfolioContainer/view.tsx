@@ -2,11 +2,9 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Alert from '@mui/material/Alert';
 import Pagination from '@mui/material/Pagination';
-import {
-  PortfolioCard,
-  LoadingPortfolioCard,
-} from './components/PortfolioCard';
+import { PortfolioCard, LoadingPortfolioCard } from 'components/PortfolioCard';
 import { Portfolio } from 'common/types';
+import { WORDINGS } from 'common/constants';
 
 interface ViewProps {
   page: number;
@@ -36,7 +34,7 @@ function View({
     >
       {errorCode && (
         <Alert severity="error" sx={{ mb: 2 }} onClose={onErrorReset}>
-          {errorCode}
+          {WORDINGS.ERRORS[errorCode]}
         </Alert>
       )}
 

@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { useQuery, useQueryClient } from 'react-query';
+import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 import portfolioService from 'services/portfolio';
 import { ApiError, Page, Portfolio } from 'common/types';
-import { portfolioCacheKey } from './utils';
+import { portfolioSearchKey } from './keys';
 
 type PortfoliosPage = Page<Portfolio[], 'portfolios'>;
 
 interface UsePortfolioSearchQuery {
-  searchKeyword?: string;
+  initialSearchKeyword?: string;
   onSuccess?(data: PortfoliosPage, keyword: string): void;
 }
 
@@ -15,42 +15,61 @@ const PAGE_SIZE = 9;
 const DEFAULT_PAGE = 1;
 
 const usePortfolioSearchQuery = ({
-  searchKeyword,
-  onSuccess,
+  initialSearchKeyword,
+  onSuccess: handleSuccess,
 }: UsePortfolioSearchQuery = {}) => {
-  const client = useQueryClient();
   const [page, setPage] = useState(DEFAULT_PAGE);
-  const [keyword, setKeyword] = useState(searchKeyword || '');
+  const [keyword, setKeyword] = useState(initialSearchKeyword || '');
 
-  const _getCacheKey = () =>
-    !keyword ? undefined : portfolioCacheKey([page, PAGE_SIZE, keyword]);
+  const queryKey = !keyword
+    ? undefined
+    : portfolioSearchKey({
+        pageNumber: page,
+        pageSize: PAGE_SIZE,
+        keyword,
+      });
 
-  const _searchPortfolios = () =>
+  const queryFn = () =>
     portfolioService.searchPortfolios({
       pageSize: PAGE_SIZE,
       pageNumber: page,
       searchKeyword: keyword,
     });
 
-  const { isLoading, isFetching, data, error } = useQuery<
+  const onSuccess = (data: PortfoliosPage) => {
+    handleSuccess && handleSuccess(data, keyword);
+  };
+
+  const { isFetching, isLoading, error, data, refetch } = useQuery<
     PortfoliosPage,
     ApiError
   >({
+    queryKey,
     enabled: !!keyword,
     keepPreviousData: true,
-    queryKey: _getCacheKey(),
-    queryFn: _searchPortfolios,
-    onSuccess: onSuccess && (data => onSuccess(data, keyword)),
+    queryFn,
+    onSuccess,
   });
 
-  const fetch = (k: string) => {
-    client.invalidateQueries(_getCacheKey());
-    setKeyword(k);
-  };
+  const fetch = (searchKeyword: string) => setKeyword(searchKeyword);
 
   const fetchPage = (p: number) => setPage(p);
 
-  return { isLoading, isFetching, data, error, page, fetch, fetchPage };
+  useEffect(() => {
+    if (keyword) {
+      refetch();
+    }
+  }, [keyword]);
+
+  return {
+    page,
+    data,
+    error,
+    isFetching,
+    isLoading,
+    fetch,
+    fetchPage,
+  };
 };
 
 export default usePortfolioSearchQuery;

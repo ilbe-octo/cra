@@ -3,8 +3,9 @@ import { Box, SxProps, Theme } from '@mui/material';
 import { lazy } from 'react';
 
 const Home = lazy(() => import('./pages/Home'));
-const PortfolioSearch = lazy(() => import('./pages/PortfolioSearch'));
 const Portfolio = lazy(() => import('./pages/Portfolio'));
+const PortfolioSearch = lazy(() => import('./pages/PortfolioSearch'));
+const PortfolioDetails = lazy(() => import('./pages/PortfolioDetails'));
 
 const routesDef = [
   { path: '/', title: 'Home', Component: Home },
@@ -13,7 +14,16 @@ const routesDef = [
     title: 'Portfolio Search',
     Component: PortfolioSearch,
   },
-  { path: 'portfolio', title: 'Portfolio', Component: Portfolio },
+  {
+    path: 'portfolio',
+    title: 'Portfolio',
+    Component: Portfolio,
+  },
+  {
+    path: 'portfolio/:portfolioCode',
+    title: 'Portfolio Details',
+    Component: PortfolioDetails,
+  },
 ];
 
 const mainStyles: SxProps<Theme> = {

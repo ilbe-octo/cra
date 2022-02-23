@@ -10,15 +10,20 @@ function PortfolioContainer() {
 
   const searchKeyword = searchParams.get('q') || '';
 
-  const { error, data, page, fetchPage } = usePortfolioSearchQuery({
-    searchKeyword,
+  const {
+    error: searchError,
+    data,
+    page,
+    fetchPage,
+  } = usePortfolioSearchQuery({
+    initialSearchKeyword: searchKeyword,
   });
 
   useEffect(() => {
-    if (error && error.messageList.length > 0) {
-      setErrorCode(error.messageList[0].code);
+    if (searchError && searchError.messageList.length > 0) {
+      setErrorCode(searchError.messageList[0].code);
     }
-  }, [error]);
+  }, [searchError]);
 
   useEffect(() => {
     if (!searchKeyword) {

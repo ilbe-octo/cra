@@ -1,13 +1,16 @@
+import { Link } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
-import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import {
   ArrowForwardIosOutlined as ArrowForwardIcon,
+  Delete as DeleteIcon,
   MoreVert as MoreVertIcon,
 } from '@mui/icons-material';
+import DropDownMenu from 'components/DropDownMenu';
 import { Portfolio } from 'common/types';
 import { WORDINGS, PATHS } from 'common/constants';
 import { formatDate } from 'utils';
@@ -18,11 +21,23 @@ import {
   portfolioDetailLabelStyles,
 } from './styles';
 
-interface PortfolioCardProps {
+type PortfolioCardProps = {
+  loading?: boolean;
   portfolio: Portfolio;
-}
+} & (
+  | {
+      enableActions: true;
+      onDelete(): void;
+    }
+  | { enableActions?: false; onDelete?: never }
+);
 
-function PortfolioCard({ portfolio }: PortfolioCardProps) {
+function PortfolioCard({
+  loading,
+  portfolio,
+  enableActions,
+  onDelete,
+}: PortfolioCardProps) {
   const { code, type, parentCode, creationDate, division, manager } = portfolio;
 
   const portfolioDetailsContent = [
@@ -40,9 +55,19 @@ function PortfolioCard({ portfolio }: PortfolioCardProps) {
 
     {
       label: `${WORDINGS.PORTFOLIO_MANAGER}: `,
-      content: manager.fullName
+      content: manager
         ? `${manager.fullName} (${manager.username})`
-        : manager.username,
+        : WORDINGS.NOT_SPECIFIED,
+    },
+  ];
+
+  const items = [
+    {
+      label: 'Delete',
+      Icon: DeleteIcon,
+      onClick: () => {
+        onDelete && onDelete();
+      },
     },
   ];
 
@@ -50,23 +75,30 @@ function PortfolioCard({ portfolio }: PortfolioCardProps) {
     <Card variant="elevation" sx={portfolioCardStyles}>
       <CardHeader
         action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
+          enableActions && (
+            <DropDownMenu
+              id={`menu-${code}`}
+              loading={loading}
+              Element={MoreVertIcon}
+              items={items}
+            />
+          )
         }
         title={code}
         subheader={formatDate(creationDate, "'Crée le' dd MMMM yyyy")}
       />
       <PortfolioDetailsCardContent items={portfolioDetailsContent} />
       <CardActions disableSpacing>
-        <IconButton
+        <Button
           size="small"
           aria-label="show more"
+          disabled={loading}
+          component={Link}
           sx={portfolioCardActionStyles}
-          href={PATHS.portfolioDetail.to(code)}
+          to={PATHS.portfolioDetail.to(code)}
         >
           <ArrowForwardIcon />
-        </IconButton>
+        </Button>
       </CardActions>
     </Card>
   );

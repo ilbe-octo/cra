@@ -8,7 +8,11 @@ function PortfolioSearchContainer() {
   const navigate = useNavigate();
   const [errorCode, setErrorCode] = useState<string>();
 
-  const { isFetching, error, fetch } = usePortfolioSearchQuery({
+  const {
+    isFetching,
+    error: searchError,
+    fetch,
+  } = usePortfolioSearchQuery({
     onSuccess: (_, keyword) => {
       const searchParams = createSearchParams({ q: keyword });
       navigate(PATHS.portfolio.to(searchParams));
@@ -20,10 +24,10 @@ function PortfolioSearchContainer() {
   };
 
   useEffect(() => {
-    if (error && error.messageList.length > 0) {
-      setErrorCode(error.messageList[0].code);
+    if (searchError && searchError.messageList.length > 0) {
+      setErrorCode(searchError.messageList[0].code);
     }
-  }, [error]);
+  }, [searchError]);
 
   return (
     <View

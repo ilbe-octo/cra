@@ -7,8 +7,11 @@ export interface Portfolio {
   parentCode?: string;
   type: string;
   creationDate: Date;
-  manager: {
-    username: string;
-    fullName?: string;
-  };
+  manager?: Omit<PortfolioManager, 'primary'>;
+}
+
+export interface PortfolioManager {
+  username: string;
+  fullName: string;
+  primary: boolean;
 }
